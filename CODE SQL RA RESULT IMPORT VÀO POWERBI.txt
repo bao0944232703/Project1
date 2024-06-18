@@ -1,0 +1,43 @@
+select *
+from UserCarData
+
+alter table UsercarData
+drop column torque
+
+with cte AS(
+select [year],name,count(Sales_ID) as Revenue
+from UserCarData
+group by [year],name
+)
+select a.year,a.name,Revenue
+from cte a,(select year,max(Revenue) as max from cte group by year) b
+where a.[year]=b.[year] AND a.Revenue=B.[max]
+
+
+
+select [year],name,sum(selling_price) as Revenue
+from UserCarData
+group by [year],name
+order by [year]
+
+
+
+with cte AS(
+select [year],name,count(Sales_ID) as Total_Order
+from UserCarData
+group by [year],name
+)
+select a.year,a.name,Total_Order
+from cte a,(select year,max(Total_Order) as max from cte group by year) b
+where a.[year]=b.[year] AND a.Total_Order=B.[max]
+
+
+select name,count(case when sold ='Y' then Sales_ID END) as Y, count(case when sold='N' then Sales_ID End) as N
+from UserCarData
+group by name
+order by N DESC
+
+select name,count(case when sold ='Y' then Sales_ID END) as Y, count(case when sold='N' then Sales_ID End) as N, 
+AVG(selling_price) as AVG
+from UserCarData
+group by name
